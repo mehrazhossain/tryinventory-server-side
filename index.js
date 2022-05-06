@@ -34,17 +34,28 @@ async function run() {
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
       res.send(result);
     });
+
     // GET API
     app.get('/product', async (req, res) => {
       const cursor = productCollection.find();
       const products = await cursor.toArray();
       res.send(products);
     });
+
+    // get a product using id
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
+    });
+
+    // delete a product
+    app.delete('/product/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
