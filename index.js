@@ -50,6 +50,30 @@ async function run() {
       res.send(product);
     });
 
+    // update product
+    app.put(`/product/:id`, async (req, res) => {
+      const id = req.params.id;
+      const updatedProduct = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          name: updatedProduct.name,
+          supplier: updatedProduct.supplier,
+          image: updatedProduct.image,
+          price: updatedProduct.price,
+          quantity: updatedProduct.quantity,
+          description: updatedProduct.description,
+        },
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(result);
+    });
+
     // delete a product
     app.delete('/product/:id', async (req, res) => {
       const id = req.params.id;
