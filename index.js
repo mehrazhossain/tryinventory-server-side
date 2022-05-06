@@ -10,6 +10,35 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// database connectivity and so on
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.uovn6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+
+async function run() {
+  try {
+    await client.connect();
+    const productCollection = client
+      .db('tryinventory-db')
+      .collection('product');
+
+    // POST API
+    app.post('/manage-inventory/add-new-item', async (req, res) => {
+      const newProduct = req.body;
+      console.log('adding new product', newProduct);
+
+      const result = await productCollection.insertOne(newProduct);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      res.send(result);
+    });
+  } finally {
+  }
+}
+run().catch(console.dir);
+
 app.get('/', (req, res) => {
   res.send('Welcome to TryInventory server');
 });
