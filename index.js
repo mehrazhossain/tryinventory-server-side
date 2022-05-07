@@ -37,9 +37,19 @@ async function run() {
 
     // GET API
     app.get('/product', async (req, res) => {
+      const email = req.query.email;
       const cursor = productCollection.find();
       const products = await cursor.toArray();
       res.send(products);
+    });
+
+    // GET API for Email based find
+    app.get('/user/product', async (req, res) => {
+      const email = req.query.email;
+      const query = { email };
+      const cursor = productCollection.find(query);
+      const userProducts = await cursor.toArray();
+      res.send(userProducts);
     });
 
     // get a product using id
@@ -64,7 +74,7 @@ async function run() {
           price: updatedProduct.price,
           quantity: updatedProduct.quantity,
           description: updatedProduct.description,
-          sold: updatedProduct.sold
+          sold: updatedProduct.sold,
         },
       };
       const result = await productCollection.updateOne(
