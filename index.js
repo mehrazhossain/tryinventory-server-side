@@ -69,6 +69,14 @@ async function run() {
       res.send(userProducts);
     });
 
+    // get a blog using id
+    app.get('/blog/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const blog = await blogCollection.findOne(query);
+      res.send(blog);
+    });
+
     // get a product using id
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
