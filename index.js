@@ -25,6 +25,9 @@ async function run() {
       .db('tryinventory-db')
       .collection('product');
 
+    await client.connect();
+    const blogCollection = client.db('tryinventory-db').collection('blog');
+
     // POST API
     app.post('/manage-inventory/add-new-item', async (req, res) => {
       const newProduct = req.body;
@@ -35,9 +38,23 @@ async function run() {
       res.send(result);
     });
 
+    // POST API for Blogs
+    app.post('/blog/add-blog', async (req, res) => {
+      const newBlog = req.body;
+
+      const result = await blogCollection.insertOne(newBlog);
+      res.send(result);
+    });
+
+    // GET API for Blogs
+    app.get('/blog', async (req, res) => {
+      const cursor = blogCollection.find();
+      const blogs = await cursor.toArray();
+      res.send(blogs);
+    });
+
     // GET API
     app.get('/product', async (req, res) => {
-      const email = req.query.email;
       const cursor = productCollection.find();
       const products = await cursor.toArray();
       res.send(products);
