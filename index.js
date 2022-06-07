@@ -68,6 +68,7 @@ async function run() {
       const userProducts = await cursor.toArray();
       res.send(userProducts);
     });
+    console.log('testing product collection for heroku server');
 
     // get a blog using id
     app.get('/blog/:id', async (req, res) => {
